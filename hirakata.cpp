@@ -334,10 +334,10 @@ int wmain() {
     #endif
 
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
-    
+    clearScreen();
     mainMenu();
 
-    clearScreen();
+    
 
 
     return 0;
