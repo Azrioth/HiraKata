@@ -1,0 +1,344 @@
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <thread>
+#include <algorithm>
+
+#ifdef _WIN32
+    #include <windows.h>
+    #include <io.h>
+    #include <fcntl.h>
+#endif
+
+int hiraPoints = 0;
+int kataPoints = 0;
+int mixedPoints = 0;
+
+std::vector <int> hiraHistory = {0};
+std::vector <int> kataHistory = {0};
+std::vector <int> mixedHistory = {0};
+
+double maxHira = *std::max_element(std::begin(hiraHistory), std::end(hiraHistory));
+double maxKata = *std::max_element(std::begin(kataHistory), std::end(kataHistory));
+double maxMixed = *std::max_element(std::begin(mixedHistory), std::end(mixedHistory));
+
+std::vector<std::wstring> hiraganaKeys = {
+    L"あ", L"い", L"う", L"え", L"お",
+    L"か", L"き", L"く", L"け", L"こ",
+    L"さ", L"し", L"す", L"せ", L"そ",
+    L"た", L"ち", L"つ", L"て", L"と",
+    L"な", L"に", L"ぬ", L"ね", L"の",
+    L"は", L"ひ", L"ふ", L"へ", L"ほ",
+    L"ま", L"み", L"む", L"め", L"も",
+    L"や",        L"ゆ",        L"よ",
+    L"ら", L"り", L"る", L"れ", L"ろ",
+    L"わ",                    L"を",
+    L"ん"
+    L"が", L"ぎ", L"ぐ", L"げ", L"ご",
+    L"ざ", L"じ", L"ず", L"ぜ", L"ぞ",
+    L"だ", L"ぢ", L"づ", L"で", L"ど",
+    L"ば", L"び", L"ぶ", L"べ", L"ぼ",
+    L"ぱ", L"ぴ", L"ぷ", L"ぺ", L"ぽ"
+};
+
+std::unordered_map<std::wstring, std::wstring> hiragana = {
+    {L"あ", L"a"}, {L"い", L"i"}, {L"う", L"u"}, {L"え", L"e"}, {L"お", L"o"},
+    {L"か", L"ka"}, {L"き", L"ki"}, {L"く", L"ku"}, {L"け", L"ke"}, {L"こ", L"ko"},
+    {L"さ", L"sa"}, {L"し", L"shi"}, {L"す", L"su"}, {L"せ", L"se"}, {L"そ", L"so"},
+    {L"た", L"ta"}, {L"ち", L"chi"}, {L"つ", L"tsu"}, {L"て", L"te"}, {L"と", L"to"},
+    {L"な", L"na"}, {L"に", L"ni"}, {L"ぬ", L"nu"}, {L"ね", L"ne"}, {L"の", L"no"},
+    {L"は", L"ha"}, {L"ひ", L"hi"}, {L"ふ", L"fu"}, {L"へ", L"he"}, {L"ほ", L"ho"},
+    {L"ま", L"ma"}, {L"み", L"mi"}, {L"む", L"mu"}, {L"め", L"me"}, {L"も", L"mo"},
+    {L"や", L"ya"},             {L"ゆ", L"yu"},             {L"よ", L"yo"},
+    {L"ら", L"ra"}, {L"り", L"ri"}, {L"る", L"ru"}, {L"れ", L"re"}, {L"ろ", L"ro"},
+    {L"わ", L"wa"},                         {L"を", L"wo"},
+    {L"ん", L"n"},
+    {L"が", L"ga"}, {L"ぎ", L"gi"}, {L"ぐ", L"gu"}, {L"げ", L"ge"}, {L"ご", L"go"},
+    {L"ざ", L"za"}, {L"じ", L"ji"}, {L"ず", L"zu"}, {L"ぜ", L"ze"}, {L"ぞ", L"zo"},
+    {L"だ", L"da"}, {L"ぢ", L"ji"}, {L"づ", L"zu"}, {L"で", L"de"}, {L"ど", L"do"},
+    {L"ば", L"ba"}, {L"び", L"bi"}, {L"ぶ", L"bu"}, {L"べ", L"be"}, {L"ぼ", L"bo"},
+    {L"ぱ", L"pa"}, {L"ぴ", L"pi"}, {L"ぷ", L"pu"}, {L"ぺ", L"pe"}, {L"ぽ", L"po"}
+};
+
+std::vector<std::wstring> katakanaKeys = {
+    L"ア", L"イ", L"ウ", L"エ", L"オ",
+    L"カ", L"キ", L"ク", L"ケ", L"コ",
+    L"サ", L"シ", L"ス", L"セ", L"ソ",
+    L"タ", L"チ", L"ツ", L"テ", L"ト",
+    L"ナ", L"ニ", L"ヌ", L"ネ", L"ノ",
+    L"ハ", L"ヒ", L"フ", L"ヘ", L"ホ",
+    L"マ", L"ミ", L"ム", L"メ", L"モ",
+    L"ヤ",        L"ユ",        L"ヨ",
+    L"ラ", L"リ", L"ル", L"レ", L"ロ",
+    L"ワ",                    L"ヲ",
+    L"ン",
+    L"ガ", L"ギ", L"グ", L"ゲ", L"ゴ",
+    L"ザ", L"ジ", L"ズ", L"ゼ", L"ゾ",
+    L"ダ", L"ヂ", L"ヅ", L"デ", L"ド",
+    L"バ", L"ビ", L"ブ", L"ベ", L"ボ",
+    L"パ", L"ピ", L"プ", L"ペ", L"ポ"
+};
+
+std::unordered_map<std::wstring, std::wstring> katakana = {
+    {L"ア", L"a"}, {L"イ", L"i"}, {L"ウ", L"u"}, {L"エ", L"e"}, {L"オ", L"o"},
+    {L"カ", L"ka"}, {L"キ", L"ki"}, {L"ク", L"ku"}, {L"ケ", L"ke"}, {L"コ", L"ko"},
+    {L"サ", L"sa"}, {L"シ", L"shi"}, {L"ス", L"su"}, {L"セ", L"se"}, {L"ソ", L"so"},
+    {L"タ", L"ta"}, {L"チ", L"chi"}, {L"ツ", L"tsu"}, {L"テ", L"te"}, {L"ト", L"to"},
+    {L"ナ", L"na"}, {L"ニ", L"ni"}, {L"ヌ", L"nu"}, {L"ネ", L"ne"}, {L"ノ", L"no"},
+    {L"ハ", L"ha"}, {L"ヒ", L"hi"}, {L"フ", L"fu"}, {L"ヘ", L"he"}, {L"ホ", L"ho"},
+    {L"マ", L"ma"}, {L"ミ", L"mi"}, {L"ム", L"mu"}, {L"メ", L"me"}, {L"モ", L"mo"},
+    {L"ヤ", L"ya"},             {L"ユ", L"yu"},             {L"ヨ", L"yo"},
+    {L"ラ", L"ra"}, {L"リ", L"ri"}, {L"ル", L"ru"}, {L"レ", L"re"}, {L"ロ", L"ro"},
+    {L"ワ", L"wa"},                         {L"ヲ", L"wo"},
+    {L"ン", L"n"},
+
+    {L"ガ", L"ga"}, {L"ギ", L"gi"}, {L"グ", L"gu"}, {L"ゲ", L"ge"}, {L"ゴ", L"go"},
+    {L"ザ", L"za"}, {L"ジ", L"ji"}, {L"ズ", L"zu"}, {L"ゼ", L"ze"}, {L"ゾ", L"zo"},
+    {L"ダ", L"da"}, {L"ヂ", L"ji"}, {L"ヅ", L"zu"}, {L"デ", L"de"}, {L"ド", L"do"},
+    {L"バ", L"ba"}, {L"ビ", L"bi"}, {L"ブ", L"bu"}, {L"ベ", L"be"}, {L"ボ", L"bo"},
+    {L"パ", L"pa"}, {L"ピ", L"pi"}, {L"プ", L"pu"}, {L"ペ", L"pe"}, {L"ポ", L"po"}
+};
+
+std::unordered_map<int, std::wstring> categoryMap = {
+    {1, L"Hiragana"},
+    {2, L"Katakana"},
+    {3, L"Mixed"}
+};
+
+void mainMenu();
+
+void printAsciiArt() {
+    std::wcout << LR"( __          __  _                             _           _    _ _           _  __     _          _ 
+ \ \        / / | |                           | |         | |  | (_)         | |/ /    | |        | |
+  \ \  /\  / /__| | ___ ___  _ __ ___   ___   | |_ ___    | |__| |_ _ __ __ _| ' / __ _| |_ __ _  | |
+   \ \/  \/ / _ \ |/ __/ _ \| '_ ` _ \ / _ \  | __/ _ \   |  __  | | '__/ _` |  < / _` | __/ _` | | |
+    \  /\  /  __/ | (_| (_) | | | | | |  __/  | || (_) |  | |  | | | | | (_| | . \ (_| | || (_| | |_|
+     \/  \/ \___|_|\___\___/|_| |_| |_|\___|   \__\___/   |_|  |_|_|_|  \__,_|_|\_\__,_|\__\__,_| (_)
+                                                                                                     
+                                                                                                     )" << std::endl;
+}
+
+
+
+void clearScreen(){
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
+}
+
+void hiraganaQuiz(int rounds) {
+    std::wcout << L"Starting Hiragana Quiz! Type the romaji for the given Hiragana character." << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+
+    for (int i = 0; i < rounds; i++) {
+        int index = std::rand() % hiraganaKeys.size();
+        std::wstring character = hiraganaKeys[index];
+        std::wstring answer = hiragana[character];
+
+        std::wcout << i+1 <<L". What is the romaji for " << character << L"?" << std::endl;
+        std::wstring userInput;
+        std::wcin >> userInput;
+
+        if (userInput == answer) {
+            std::wcout << L"Correct!" << std::endl << std::endl;
+            hiraPoints++;
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        } else {
+            std::wcout << L"Wrong! The correct answer is: " << answer << std::endl << std::endl;
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+    }
+
+    std::wcout << L"おつかれ! You scored " << hiraPoints << L" points!" << std::endl;
+    hiraHistory.emplace_back(hiraPoints);
+
+    std::wcout << L"Press Enter to return to the main menu...";
+    std::wcin.ignore();
+    std::wcin.get();
+
+    clearScreen();
+    mainMenu();
+
+}
+
+void katakanaQuiz(int rounds) {
+    std::wcout << L"Starting Katakana Quiz! Type the romaji for the given Katakana character." << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+
+    for (int i = 0; i < rounds; i++) {
+        int index = std::rand() % katakanaKeys.size();
+        std::wstring character = katakanaKeys[index];
+        std::wstring answer = katakana[character];
+
+        std::wcout << i+1 <<L". What is the romaji for " << character << L"?" << std::endl;
+        std::wstring userInput;
+        std::wcin >> userInput;
+
+        if (userInput == answer) {
+            std::wcout << L"Correct!" << std::endl << std::endl;
+            kataPoints++;
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        } else {
+            std::wcout << L"Wrong! The correct answer is: " << answer << std::endl << std::endl;
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+    }
+
+    std::wcout << L"おつかれ! You scored " << kataPoints << L" points!" << std::endl;
+    kataHistory.emplace_back(kataPoints);
+
+    std::wcout << L"Press Enter to return to the main menu...";
+    std::wcin.ignore();
+    std::wcin.get();
+    clearScreen();
+    mainMenu();
+}
+
+void mixedQuiz(int rounds) {
+    std::wcout << L"Starting Mixed Quiz! Type the romaji for the given character." << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+
+    for (int i = 0; i < rounds; i++) {
+        bool isHiragana = std::rand() % 2;
+        std::wstring character;
+        std::wstring answer;
+
+        if (isHiragana) {
+            int index = std::rand() % hiraganaKeys.size();
+            character = hiraganaKeys[index];
+            answer = hiragana[character];
+        } else {
+            int index = std::rand() % katakanaKeys.size();
+            character = katakanaKeys[index];
+            answer = katakana[character];
+        }
+
+        std::wcout << i+1 <<L". What is the romaji for " << character << L"?" << std::endl;
+        std::wstring userInput;
+        std::wcin >> userInput;
+
+        if (userInput == answer) {
+            std::wcout << L"Correct!" << std::endl << std::endl;
+            mixedPoints++;
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        } else {
+            std::wcout << L"Wrong! The correct answer is: " << answer << std::endl << std::endl;
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+    }
+
+    std::wcout << L"おつかれ! You scored " << mixedPoints << L" points!" << std::endl;
+    mixedHistory.emplace_back(mixedPoints);
+
+    std::wcout << L"Press Enter to return to the main menu...";
+    std::wcin.ignore();
+    std::wcin.get();
+    clearScreen();
+    mainMenu();
+}
+
+void mainMenu(){
+    printAsciiArt();
+
+    int choice;
+    int rounds;
+    
+    std::wcout << L"\t      -------------------------------------------------------------------------" << std::endl;
+    std::wcout << L"\t      |   「HiraKata」へようこそ！ Your Hiragana / Katakana practice buddy!   |" << std::endl;
+    std::wcout << L"\t      -------------------------------------------------------------------------" << std::endl << std::endl;
+
+    std::wcout << L"------------------------------------------------------" << std::endl;
+    std::wcout << L"Category\tMost Recent Score" << std::endl <<std::endl;
+    std::wcout << L"Hiragana:\t\t" << hiraHistory.back() << std::endl;
+    std::wcout << L"Katakana:\t\t" << kataHistory.back() << std::endl;
+    std::wcout << L"Mixed:\t\t\t" << mixedHistory.back() << std::endl;
+    
+    std::wcout << L"------------------------------------------------------" << std::endl << std::endl;
+
+    std::wcout << L"Select the number of what you would like to practice:" << std::endl;
+    std::wcout << L"(1) Hiragana\n(2) Katakana\n(3) Mix of both\n(4) Quit\n" << std::endl;
+    std::wcout << L"Your choice: ";
+    
+    while (true){
+        std::wcin >> choice;
+        if (choice >=1 && choice <=3) break;
+        if (!std::wcin >> choice){
+            std::wcin.clear();
+            std::wcin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::wcout << L"Invalid input. Please select from the choices provided" << std::endl;
+            choice = 0;
+            std::wcout << L"Your choice: ";
+            continue;
+        }
+        if (choice == 4) {
+            std::wcout << L"ありがとう! See you next time!" << std::endl;
+            exit(0);
+        }
+        std::wcout << L"Invalid choice. Please select from the choices provided" << std::endl;
+        std::wcout << L"Your choice: ";
+    }
+    std::wcout << L"----------------------------------------\n\n";
+    std::wcout << L"How many rounds would you like to play?\n" << std::endl;
+    std::wcout << L"Your choice: ";
+    
+    while (true){
+        std::wcin >> rounds;
+        if (!std::wcin >> rounds){
+            std::wcin.clear();
+            std::wcin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::wcout << L"Invalid input. Please input a positive number" << std::endl;
+            rounds = 0;
+            std::wcout << L"Your choice: ";
+            continue;
+        }
+        if (rounds > 0) break;
+        std::wcout << L"Please enter a positive number for rounds" << std::endl;
+        std::wcout << L"Your choice: ";
+    }
+
+    auto it = categoryMap.find(choice);
+    if (it == categoryMap.end()) {
+        std::wcout << L"Error: Invalid category choice." << std::endl;
+        return;
+    }
+    std::wcout << L"----------------------------------------\n";
+    std::wcout << L"\nYou have selected " << it->second << " with a question count of " << rounds << L"! がんばって！" << std::endl << std::endl;
+    std::wcout << L"Press Enter to begin your practice!";
+    std::wcin.ignore();
+    std::wcin.get();
+    clearScreen();
+
+    switch(choice){
+        case 1:
+            hiraganaQuiz(rounds);
+            break;
+        case 2:
+            katakanaQuiz(rounds);
+            break;
+        case 3:
+            mixedQuiz(rounds);
+            break;
+    }
+
+}
+
+int main() {
+    #ifdef _WIN32
+        SetConsoleOutputCP(CP_UTF8);
+        SetConsoleCP(CP_UTF8);
+        _setmode(_fileno(stdout), _O_U8TEXT);
+    #endif
+
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+    
+    mainMenu();
+
+    clearScreen();
+
+
+    return 0;
+}
