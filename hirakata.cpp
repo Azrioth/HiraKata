@@ -326,7 +326,7 @@ void mainMenu(){
 
 }
 
-int main() {
+int wmain() {
     #ifdef _WIN32
         SetConsoleOutputCP(CP_UTF8);
         SetConsoleCP(CP_UTF8);
