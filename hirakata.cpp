@@ -5,6 +5,7 @@
 #include <ctime>
 #include <thread>
 #include <algorithm>
+#include <iomanip>
 
 #ifdef _WIN32
     #include <windows.h>
@@ -166,6 +167,7 @@ void clearScreen(){
 void hiraganaQuiz(int rounds) {
     hiraPoints = 0;
     std::wcout << L"Starting Hiragana Quiz! Type the romaji for the given Hiragana character." << std::endl;
+    std::wcout << L"If you're having trouble viewing the characters, please zoom in." << std::endl << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(2));
 
     for (int i = 0; i < rounds; i++) {
@@ -205,6 +207,7 @@ void hiraganaQuiz(int rounds) {
 void katakanaQuiz(int rounds) {
     kataPoints = 0;
     std::wcout << L"Starting Katakana Quiz! Type the romaji for the given Katakana character." << std::endl;
+    std::wcout << L"If you're having trouble viewing the characters, please zoom in." << std::endl << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(2));
 
     for (int i = 0; i < rounds; i++) {
@@ -242,6 +245,7 @@ void katakanaQuiz(int rounds) {
 void mixedQuiz(int rounds) {
     mixedPoints = 0;
     std::wcout << L"Starting Mixed Quiz! Type the romaji for the given character." << std::endl;
+    std::wcout << L"If you're having trouble viewing the characters, please zoom in." << std::endl << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(2));
 
     for (int i = 0; i < rounds; i++) {
@@ -280,6 +284,99 @@ void mixedQuiz(int rounds) {
     mixedHistory.push_back(currentScore);
 
     std::wcout << L"Press Enter to return to the main menu...";
+    std::wcin.ignore();
+    std::wcin.get();
+    clearScreen();
+    mainMenu();
+}
+
+void displayTables() {
+    // Use ideographic (full-width) space for empty cells so columns align visually
+    const std::wstring FW_SPACE = L"　"; // U+3000
+
+    std::vector<std::wstring> rowLabels = {
+        L" ", L"k", L"s", L"t", L"n", L"h", L"m", L"y", L"r", L"w", L"n", L"g", L"z", L"d", L"b", L"p"
+    };
+    std::vector<std::vector<std::wstring>> hiraTable = {
+        {L"あ", L"い", L"う", L"え", L"お"},
+        {L"か", L"き", L"く", L"け", L"こ"},
+        {L"さ", L"し", L"す", L"せ", L"そ"},
+        {L"た", L"ち", L"つ", L"て", L"と"},
+        {L"な", L"に", L"ぬ", L"ね", L"の"},
+        {L"は", L"ひ", L"ふ", L"へ", L"ほ"},
+        {L"ま", L"み", L"む", L"め", L"も"},
+        {L"や", L" ", L"ゆ", L" ", L"よ"},
+        {L"ら", L"り", L"る", L"れ", L"ろ"},
+        {L"わ", L" ", L" ", L" ", L"を"},
+        {L"ん", L" ", L" ", L" ", L" "},
+        {L"が", L"ぎ", L"ぐ", L"げ", L"ご"},
+        {L"ざ", L"じ", L"ず", L"ぜ", L"ぞ"},
+        {L"だ", L"ぢ", L"づ", L"で", L"ど"},
+        {L"ば", L"び", L"ぶ", L"べ", L"ぼ"},
+        {L"ぱ", L"ぴ", L"ぷ", L"ぺ", L"ぽ"}
+    };
+
+    std::vector<std::vector<std::wstring>> kataTable = {
+        {L"ア", L"イ", L"ウ", L"エ", L"オ"},
+        {L"カ", L"キ", L"ク", L"ケ", L"コ"},
+        {L"サ", L"シ", L"ス", L"セ", L"ソ"},
+        {L"タ", L"チ", L"ツ", L"テ", L"ト"},
+        {L"ナ", L"ニ", L"ヌ", L"ネ", L"ノ"},
+        {L"ハ", L"ヒ", L"フ", L"ヘ", L"ホ"},
+        {L"マ", L"ミ", L"ム", L"メ", L"モ"},
+        {L"ヤ", L" ", L"ユ", L" ", L"ヨ"},
+        {L"ラ", L"リ", L"ル", L"レ", L"ロ"},
+        {L"ワ", L" ", L" ", L" ", L"ヲ"},
+        {L"ン", L" ", L" ", L" ", L" "},
+        {L"ガ", L"ギ", L"グ", L"ゲ", L"ゴ"},
+        {L"ザ", L"ジ", L"ズ", L"ゼ", L"ゾ"},
+        {L"ダ", L"ヂ", L"ヅ", L"デ", L"ド"},
+        {L"バ", L"ビ", L"ブ", L"ベ", L"ボ"},
+        {L"パ", L"ピ", L"プ", L"ペ", L"ポ"}
+    };
+
+    clearScreen();
+
+    // Header
+    std::wcout << L"\n---------- Hiragana Table ----------" << std::endl;
+    std::wcout << std::left << std::setw(6) << L" " 
+               << std::setw(6) << L"a" 
+               << std::setw(6) << L" i" 
+               << std::setw(6) << L"  u" 
+               << std::setw(6) << L"   e" 
+               << std::setw(6) << L"    o" 
+               << std::endl;
+    std::wcout << std::wstring(36, L'-') << std::endl;
+
+    for (size_t i = 0; i < hiraTable.size(); ++i) {
+        std::wcout << std::left << std::setw(6) << rowLabels[i];
+        for (const auto& ch_in : hiraTable[i]) {
+            std::wstring ch = (ch_in == L" " ? FW_SPACE : ch_in);
+            std::wcout << std::left << std::setw(6) << ch;
+        }
+        std::wcout << std::endl;
+    }
+    std::wcout << std::wstring(36, L'-') << std::endl;
+    std::wcout << L"\n---------- Katakana Table ----------" << std::endl;
+    std::wcout << std::left << std::setw(6) << L" " 
+               << std::setw(6) << L"a" 
+               << std::setw(6) << L" i" 
+               << std::setw(6) << L"  u" 
+               << std::setw(6) << L"   e" 
+               << std::setw(6) << L"    o" 
+               << std::endl;
+    std::wcout << std::wstring(36, L'-') << std::endl;
+
+    for (size_t i = 0; i < kataTable.size(); ++i) {
+        std::wcout << std::left << std::setw(6) << rowLabels[i];
+        for (const auto& ch_in : kataTable[i]) {
+            std::wstring ch = (ch_in == L" " ? FW_SPACE : ch_in);
+            std::wcout << std::left << std::setw(6) << ch;
+        }
+        std::wcout << std::endl;
+    }
+    std::wcout << std::wstring(36, L'-') << std::endl;
+    std::wcout << L"\nPress Enter to return to the main menu...";
     std::wcin.ignore();
     std::wcin.get();
     clearScreen();
@@ -344,7 +441,7 @@ void mainMenu(){
     std::wcout << L"--------------------------------------------------------------------------------------\n\n";
 
     std::wcout << L"Select the number of what you would like to practice:" << std::endl;
-    std::wcout << L"(1) Hiragana\n(2) Katakana\n(3) Mix of both\n(4) Quit\n" << std::endl;
+    std::wcout << L"(1) Hiragana\n(2) Katakana\n(3) Mix of both\n(4) Reference Tables\n(5) Quit\n" << std::endl;
     std::wcout << L"Your choice: ";
     
     while (true){
@@ -359,6 +456,10 @@ void mainMenu(){
             continue;
         }
         if (choice == 4) {
+            clearScreen();
+            displayTables();
+        }
+        if (choice == 5) {
             std::wcout << L"ありがとう! See you next time!" << std::endl;
             exit(0);
         }
@@ -406,6 +507,8 @@ void mainMenu(){
         case 3:
             mixedQuiz(rounds);
             break;
+        default:
+            std::wcout << L"Error: Invalid category choice." << std::endl;
     }
 
 }
