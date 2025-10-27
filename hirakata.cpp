@@ -74,7 +74,18 @@ std::vector<std::wstring> hiraganaKeys = {
     L"ざ", L"じ", L"ず", L"ぜ", L"ぞ",
     L"だ", L"ぢ", L"づ", L"で", L"ど",
     L"ば", L"び", L"ぶ", L"べ", L"ぼ",
-    L"ぱ", L"ぴ", L"ぷ", L"ぺ", L"ぽ"
+    L"ぱ", L"ぴ", L"ぷ", L"ぺ", L"ぽ",
+    L"きゃ", L"きゅ", L"きょ",
+    L"しゃ", L"しゅ", L"しょ",
+    L"ちゃ", L"ちゅ", L"ちょ",
+    L"にゃ", L"にゅ", L"にょ",
+    L"ひゃ", L"ひゅ", L"ひょ",
+    L"みゃ", L"みゅ", L"みょ",
+    L"りゃ", L"りゅ", L"りょ",
+    L"ぎゃ", L"ぎゅ", L"ぎょ",
+    L"じゃ", L"じゅ", L"じょ",
+    L"びゃ", L"びゅ", L"びょ",
+    L"ぴゃ", L"ぴゅ", L"ぴょ"
 };
 
 std::unordered_map<std::wstring, std::wstring> hiragana = {
@@ -89,11 +100,25 @@ std::unordered_map<std::wstring, std::wstring> hiragana = {
     {L"ら", L"ra"}, {L"り", L"ri"}, {L"る", L"ru"}, {L"れ", L"re"}, {L"ろ", L"ro"},
     {L"わ", L"wa"},                         {L"を", L"wo"},
     {L"ん", L"n"},
+
     {L"が", L"ga"}, {L"ぎ", L"gi"}, {L"ぐ", L"gu"}, {L"げ", L"ge"}, {L"ご", L"go"},
     {L"ざ", L"za"}, {L"じ", L"ji"}, {L"ず", L"zu"}, {L"ぜ", L"ze"}, {L"ぞ", L"zo"},
     {L"だ", L"da"}, {L"ぢ", L"ji"}, {L"づ", L"zu"}, {L"で", L"de"}, {L"ど", L"do"},
     {L"ば", L"ba"}, {L"び", L"bi"}, {L"ぶ", L"bu"}, {L"べ", L"be"}, {L"ぼ", L"bo"},
-    {L"ぱ", L"pa"}, {L"ぴ", L"pi"}, {L"ぷ", L"pu"}, {L"ぺ", L"pe"}, {L"ぽ", L"po"}
+    {L"ぱ", L"pa"}, {L"ぴ", L"pi"}, {L"ぷ", L"pu"}, {L"ぺ", L"pe"}, {L"ぽ", L"po"},
+
+    {L"きゃ", L"kya"}, {L"きゅ", L"kyu"}, {L"きょ", L"kyo"},
+    {L"しゃ", L"sha"}, {L"しゅ", L"shu"}, {L"しょ", L"sho"},
+    {L"ちゃ", L"cha"}, {L"ちゅ", L"chu"}, {L"ちょ", L"cho"},
+    {L"にゃ", L"nya"}, {L"にゅ", L"nyu"}, {L"にょ", L"nyo"},
+    {L"ひゃ", L"hya"}, {L"ひゅ", L"hyu"}, {L"ひょ", L"hyo"},
+    {L"みゃ", L"mya"}, {L"みゅ", L"myu"}, {L"みょ", L"myo"},
+    {L"りゃ", L"rya"}, {L"りゅ", L"ryu"}, {L"りょ", L"ryo"},
+    {L"ぎゃ", L"gya"}, {L"ぎゅ", L"gyu"}, {L"ぎょ", L"gyo"},
+    {L"じゃ", L"ja"},  {L"じゅ", L"ju"},  {L"じょ", L"jo"},
+    {L"びゃ", L"bya"}, {L"びゅ", L"byu"}, {L"びょ", L"byo"},
+    {L"ぴゃ", L"pya"}, {L"ぴゅ", L"pyu"}, {L"ぴょ", L"pyo"}
+
 };
 
 std::vector<std::wstring> katakanaKeys = {
@@ -112,7 +137,18 @@ std::vector<std::wstring> katakanaKeys = {
     L"ザ", L"ジ", L"ズ", L"ゼ", L"ゾ",
     L"ダ", L"ヂ", L"ヅ", L"デ", L"ド",
     L"バ", L"ビ", L"ブ", L"ベ", L"ボ",
-    L"パ", L"ピ", L"プ", L"ペ", L"ポ"
+    L"パ", L"ピ", L"プ", L"ペ", L"ポ",
+    L"キャ", L"キュ", L"キョ",
+    L"シャ", L"シュ", L"ショ",
+    L"チャ", L"チュ", L"チョ",
+    L"ニャ", L"ニュ", L"ニョ",
+    L"ヒャ", L"ヒュ", L"ヒョ",
+    L"ミャ", L"ミュ", L"ミョ",
+    L"リャ", L"リュ", L"リョ",
+    L"ギャ", L"ギュ", L"ギョ",
+    L"ジャ", L"ジュ", L"ジョ",
+    L"ビャ", L"ビュ", L"ビョ",
+    L"ピャ", L"ピュ", L"ピョ"
 };
 
 std::unordered_map<std::wstring, std::wstring> katakana = {
@@ -132,7 +168,19 @@ std::unordered_map<std::wstring, std::wstring> katakana = {
     {L"ザ", L"za"}, {L"ジ", L"ji"}, {L"ズ", L"zu"}, {L"ゼ", L"ze"}, {L"ゾ", L"zo"},
     {L"ダ", L"da"}, {L"ヂ", L"ji"}, {L"ヅ", L"zu"}, {L"デ", L"de"}, {L"ド", L"do"},
     {L"バ", L"ba"}, {L"ビ", L"bi"}, {L"ブ", L"bu"}, {L"ベ", L"be"}, {L"ボ", L"bo"},
-    {L"パ", L"pa"}, {L"ピ", L"pi"}, {L"プ", L"pu"}, {L"ペ", L"pe"}, {L"ポ", L"po"}
+    {L"パ", L"pa"}, {L"ピ", L"pi"}, {L"プ", L"pu"}, {L"ペ", L"pe"}, {L"ポ", L"po"},
+
+    {L"キャ", L"kya"}, {L"キュ", L"kyu"}, {L"キョ", L"kyo"},
+    {L"シャ", L"sha"}, {L"シュ", L"shu"}, {L"ショ", L"sho"},
+    {L"チャ", L"cha"}, {L"チュ", L"chu"}, {L"チョ", L"cho"},
+    {L"ニャ", L"nya"}, {L"ニュ", L"nyu"}, {L"ニョ", L"nyo"},
+    {L"ヒャ", L"hya"}, {L"ヒュ", L"hyu"}, {L"ヒョ", L"hyo"},
+    {L"ミャ", L"mya"}, {L"ミュ", L"myu"}, {L"ミョ", L"myo"},
+    {L"リャ", L"rya"}, {L"リュ", L"ryu"}, {L"リョ", L"ryo"},
+    {L"ギャ", L"gya"}, {L"ギュ", L"gyu"}, {L"ギョ", L"gyo"},
+    {L"ジャ", L"ja"},  {L"ジュ", L"ju"},  {L"ジョ", L"jo"},
+    {L"ビャ", L"bya"}, {L"ビュ", L"byu"}, {L"ビョ", L"byo"},
+    {L"ピャ", L"pya"}, {L"ピュ", L"pyu"}, {L"ピョ", L"pyo"}
 };
 
 std::unordered_map<int, std::wstring> categoryMap = {
@@ -295,8 +343,13 @@ void displayTables() {
     const std::wstring FW_SPACE = L"　"; // U+3000
 
     std::vector<std::wstring> rowLabels = {
-        L" ", L"k", L"s", L"t", L"n", L"h", L"m", L"y", L"r", L"w", L"n", L"g", L"z", L"d", L"b", L"p"
+        L" ", L"k", L"s", L"t", L"n", L"h", L"m", L"y", L"r", L"w", L"n", L"g", L"z/j", L"d/j", L"b", L"p"
     };
+
+    std::vector<std::wstring> combinationrowLabels = {
+        L"ky", L"sh", L"ch", L"ny", L"hy", L"my", L"ry", L"gy", L"jy", L"by", L"py"
+    };
+
     std::vector<std::vector<std::wstring>> hiraTable = {
         {L"あ", L"い", L"う", L"え", L"お"},
         {L"か", L"き", L"く", L"け", L"こ"},
@@ -316,6 +369,20 @@ void displayTables() {
         {L"ぱ", L"ぴ", L"ぷ", L"ぺ", L"ぽ"}
     };
 
+    std::vector<std::vector<std::wstring>> combinationHiraTable = {
+        {L"きゃ", L"きゅ", L"きょ"},
+        {L"しゃ", L"しゅ", L"しょ"},
+        {L"ちゃ", L"ちゅ", L"ちょ"},
+        {L"にゃ", L"にゅ", L"にょ"},
+        {L"ひゃ", L"ひゅ", L"ひょ"},
+        {L"みゃ", L"みゅ", L"みょ"},
+        {L"りゃ", L"りゅ", L"りょ"},
+        {L"ぎゃ", L"ぎゅ", L"ぎょ"},
+        {L"じゃ", L"じゅ", L"じょ"},
+        {L"びゃ", L"びゅ", L"びょ"},
+        {L"ぴゃ", L"ぴゅ", L"ぴょ"}
+    };
+
     std::vector<std::vector<std::wstring>> kataTable = {
         {L"ア", L"イ", L"ウ", L"エ", L"オ"},
         {L"カ", L"キ", L"ク", L"ケ", L"コ"},
@@ -333,6 +400,20 @@ void displayTables() {
         {L"ダ", L"ヂ", L"ヅ", L"デ", L"ド"},
         {L"バ", L"ビ", L"ブ", L"ベ", L"ボ"},
         {L"パ", L"ピ", L"プ", L"ペ", L"ポ"}
+    };
+
+    std::vector<std::vector<std::wstring>> combinationKataTable = {
+        {L"キャ", L"キュ", L"キョ"},
+        {L"シャ", L"シュ", L"ショ"},
+        {L"チャ", L"チュ", L"チョ"},
+        {L"ニャ", L"ニュ", L"ニョ"},
+        {L"ヒャ", L"ヒュ", L"ヒョ"},
+        {L"ミャ", L"ミュ", L"ミョ"},
+        {L"リャ", L"リュ", L"リョ"},
+        {L"ギャ", L"ギュ", L"ギョ"},
+        {L"ジャ", L"ジュ", L"ジョ"},
+        {L"ビャ", L"ビュ", L"ビョ"},
+        {L"ピャ", L"ピュ", L"ピョ"}
     };
 
     clearScreen();
@@ -357,6 +438,25 @@ void displayTables() {
         std::wcout << std::endl;
     }
     std::wcout << std::wstring(36, L'-') << std::endl;
+
+    std::wcout << L"\n---- Combination Hiragana Table ----" << std::endl;
+    std::wcout << std::left << std::setw(6) << L" " 
+               << std::setw(6) << L" a" 
+               << std::setw(6) << L"   u" 
+               << std::setw(6) << L"     o" 
+               << std::endl;
+    std::wcout << std::wstring(36, L'-') << std::endl;
+
+    for (size_t i = 0; i < combinationHiraTable.size(); ++i) {
+        std::wcout << std::left << std::setw(6) << combinationrowLabels[i];
+        for (const auto& ch_in : combinationHiraTable[i]) {
+            std::wstring ch = (ch_in == L" " ? FW_SPACE : ch_in);
+            std::wcout << std::left << std::setw(6) << ch;
+        }
+        std::wcout << std::endl;
+    }
+    std::wcout << std::wstring(36, L'-') << std::endl;
+
     std::wcout << L"\n---------- Katakana Table ----------" << std::endl;
     std::wcout << std::left << std::setw(6) << L" " 
                << std::setw(6) << L"a" 
@@ -376,6 +476,24 @@ void displayTables() {
         std::wcout << std::endl;
     }
     std::wcout << std::wstring(36, L'-') << std::endl;
+
+    std::wcout << L"\n---- Combination Katakana Table ----" << std::endl;
+    std::wcout << std::left << std::setw(6) << L" " 
+               << std::setw(6) << L" a" 
+               << std::setw(6) << L"   u" 
+               << std::setw(6) << L"     o" 
+               << std::endl;
+    std::wcout << std::wstring(36, L'-') << std::endl;
+
+    for (size_t i = 0; i < combinationKataTable.size(); ++i) {
+        std::wcout << std::left << std::setw(6) << combinationrowLabels[i];
+        for (const auto& ch_in : combinationKataTable[i]) {
+            std::wstring ch = (ch_in == L" " ? FW_SPACE : ch_in);
+            std::wcout << std::left << std::setw(6) << ch;
+        }
+        std::wcout << std::endl;
+    }
+
     std::wcout << L"\nPress Enter to return to the main menu...";
     std::wcin.ignore();
     std::wcin.get();
@@ -461,6 +579,8 @@ void mainMenu(){
         }
         if (choice == 5) {
             std::wcout << L"ありがとう! See you next time!" << std::endl;
+            std::wcout << L"Exiting in 3 seconds..." << std::endl;
+            std::this_thread::sleep_for(std::chrono::seconds(3));
             exit(0);
         }
         std::wcout << L"Invalid choice. Please select from the choices provided" << std::endl;
