@@ -12,17 +12,50 @@
     #include <fcntl.h>
 #endif
 
+
+struct Score {
+    int points = 0;
+    int total = 0;
+
+    double getPercentage() const {
+        return (total == 0) ? 0.0 : (static_cast<double>(points) / total) * 100.0;
+    }
+
+    std::string showString() const {
+        return std::to_string(points) + " / " + std::to_string(total)
+            + " (" + std::to_string(static_cast<int>(getPercentage())) + "%)";
+    }
+};
+
+Score getHighestScore(const std::vector<Score>& history) {
+    if (history.empty()) return Score{};
+    return *std::max_element(history.begin(), history.end(),
+        [](const Score& a, const Score& b) {
+            return a.getPercentage() < b.getPercentage();
+        });
+}
+
+Score getTotalScore(const std::vector<Score>& history) {
+    Score total;
+    for (const auto& s : history) {
+        total.points += s.points;
+        total.total  += s.total;
+    }
+    return total;
+}
+
+
 int hiraPoints = 0;
 int kataPoints = 0;
 int mixedPoints = 0;
 
-std::vector <int> hiraHistory = {0};
-std::vector <int> kataHistory = {0};
-std::vector <int> mixedHistory = {0};
+std::vector <Score> hiraHistory;
+std::vector <Score> kataHistory;
+std::vector <Score> mixedHistory;
 
-double maxHira = *std::max_element(std::begin(hiraHistory), std::end(hiraHistory));
-double maxKata = *std::max_element(std::begin(kataHistory), std::end(kataHistory));
-double maxMixed = *std::max_element(std::begin(mixedHistory), std::end(mixedHistory));
+// double maxHira = *std::max_element(std::begin(hiraHistory), std::end(hiraHistory));
+// double maxKata = *std::max_element(std::begin(kataHistory), std::end(kataHistory));
+// double maxMixed = *std::max_element(std::begin(mixedHistory), std::end(mixedHistory));
 
 std::vector<std::wstring> hiraganaKeys = {
     L"あ", L"い", L"う", L"え", L"お",
@@ -35,7 +68,7 @@ std::vector<std::wstring> hiraganaKeys = {
     L"や",        L"ゆ",        L"よ",
     L"ら", L"り", L"る", L"れ", L"ろ",
     L"わ",                    L"を",
-    L"ん"
+    L"ん",
     L"が", L"ぎ", L"ぐ", L"げ", L"ご",
     L"ざ", L"じ", L"ず", L"ぜ", L"ぞ",
     L"だ", L"ぢ", L"づ", L"で", L"ど",
@@ -153,8 +186,11 @@ void hiraganaQuiz(int rounds) {
         }
     }
 
-    std::wcout << L"おつかれ! You scored " << hiraPoints << L" points!" << std::endl;
-    hiraHistory.emplace_back(hiraPoints);
+    std::wcout << L"おつかれ! You got a score of " << hiraPoints << L" / " << rounds << "!"<< std::endl;
+    Score currentScore;
+    currentScore.points = hiraPoints;
+    currentScore.total = rounds;
+    hiraHistory.push_back(currentScore);
 
     std::wcout << L"Press Enter to return to the main menu...";
     std::wcin.ignore();
@@ -188,8 +224,11 @@ void katakanaQuiz(int rounds) {
         }
     }
 
-    std::wcout << L"おつかれ! You scored " << kataPoints << L" points!" << std::endl;
-    kataHistory.emplace_back(kataPoints);
+    std::wcout << L"おつかれ! You got a score of " << kataPoints << L" / " << rounds << "!"<< std::endl;
+    Score currentScore;
+    currentScore.points = kataPoints;
+    currentScore.total = rounds;
+    kataHistory.push_back(currentScore);
 
     std::wcout << L"Press Enter to return to the main menu...";
     std::wcin.ignore();
@@ -231,8 +270,11 @@ void mixedQuiz(int rounds) {
         }
     }
 
-    std::wcout << L"おつかれ! You scored " << mixedPoints << L" points!" << std::endl;
-    mixedHistory.emplace_back(mixedPoints);
+    std::wcout << L"おつかれ! You got a score of " << mixedPoints << L" / " << rounds << "!"<< std::endl;
+    Score currentScore;
+    currentScore.points = mixedPoints;
+    currentScore.total = rounds;
+    mixedHistory.push_back(currentScore);
 
     std::wcout << L"Press Enter to return to the main menu...";
     std::wcin.ignore();
@@ -251,13 +293,52 @@ void mainMenu(){
     std::wcout << L"\t      |   「HiraKata」へようこそ！ Your Hiragana / Katakana practice buddy!   |" << std::endl;
     std::wcout << L"\t      -------------------------------------------------------------------------" << std::endl << std::endl;
 
-    std::wcout << L"------------------------------------------------------" << std::endl;
-    std::wcout << L"Category\tMost Recent Score" << std::endl <<std::endl;
-    std::wcout << L"Hiragana:\t\t" << hiraHistory.back() << std::endl;
-    std::wcout << L"Katakana:\t\t" << kataHistory.back() << std::endl;
-    std::wcout << L"Mixed:\t\t\t" << mixedHistory.back() << std::endl;
+    std::wcout << L"--------------------------------------------------------------------------------------" << std::endl;
+    std::wcout << L"Category\tMost Recent Score\tHighest Score\t\tTotal Score" << std::endl <<std::endl;
     
-    std::wcout << L"------------------------------------------------------" << std::endl << std::endl;
+    // --- Hiragana ---
+    if (!hiraHistory.empty()) {
+        Score recent = hiraHistory.back();
+        Score highest = getHighestScore(hiraHistory);
+        Score total = getTotalScore(hiraHistory);
+
+        std::wcout << L"Hiragana\t"
+            << recent.showString().c_str() << L"\t\t"
+            << highest.showString().c_str() << L"\t\t"
+            << total.showString().c_str() << std::endl;
+    } else {
+        std::wcout << L"Hiragana\tNo records yet.\t\tNo records yet.\t\tNo records yet.\n";
+    }
+
+    // --- Katakana ---
+    if (!kataHistory.empty()) {
+        Score recent = kataHistory.back();
+        Score highest = getHighestScore(kataHistory);
+        Score total = getTotalScore(kataHistory);
+
+        std::wcout << L"Katakana\t"
+            << recent.showString().c_str() << L"\t\t"
+            << highest.showString().c_str() << L"\t\t"
+            << total.showString().c_str() << std::endl;
+    } else {
+        std::wcout << L"Katakana\tNo records yet.\t\tNo records yet.\t\tNo records yet.\t\n";
+    }
+
+    // --- Mixed ---
+    if (!mixedHistory.empty()) {
+        Score recent = mixedHistory.back();
+        Score highest = getHighestScore(mixedHistory);
+        Score total = getTotalScore(mixedHistory);
+
+        std::wcout << L"Mixed\t\t"
+            << recent.showString().c_str() << L"\t\t"
+            << highest.showString().c_str() << L"\t\t"
+            << total.showString().c_str() << std::endl;
+    } else {
+        std::wcout << L"Mixed\t\tNo records yet.\t\tNo records yet.\t\tNo records yet.\n";
+    }
+
+    std::wcout << L"--------------------------------------------------------------------------------------\n\n";
 
     std::wcout << L"Select the number of what you would like to practice:" << std::endl;
     std::wcout << L"(1) Hiragana\n(2) Katakana\n(3) Mix of both\n(4) Quit\n" << std::endl;
