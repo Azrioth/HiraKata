@@ -164,6 +164,7 @@ void clearScreen(){
 }
 
 void hiraganaQuiz(int rounds) {
+    hiraPoints = 0;
     std::wcout << L"Starting Hiragana Quiz! Type the romaji for the given Hiragana character." << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(2));
 
@@ -202,6 +203,7 @@ void hiraganaQuiz(int rounds) {
 }
 
 void katakanaQuiz(int rounds) {
+    kataPoints = 0;
     std::wcout << L"Starting Katakana Quiz! Type the romaji for the given Katakana character." << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(2));
 
@@ -238,6 +240,7 @@ void katakanaQuiz(int rounds) {
 }
 
 void mixedQuiz(int rounds) {
+    mixedPoints = 0;
     std::wcout << L"Starting Mixed Quiz! Type the romaji for the given character." << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(2));
 
